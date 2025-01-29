@@ -14,9 +14,12 @@ const NavbarLeft = () => {
   ];
 
   const categories = [
-    'Estudar', 'Faculdade', 'Dentista', 'Racha', 'Academia', 
-    'Trabalho', 'Estudar React', 'Encontro', 'Pedalar'
+    'Estudo', 'Trabalho', 'Atividade Fisica', 'Lazer', 'outro'
   ];
+
+  const prioridades = [
+    'Alta', 'Media', 'Moderada', 'Altissima'
+  ]
 
   const renderNavItems = (items) => {
     return items.map(item => (
@@ -91,6 +94,21 @@ const NavbarLeft = () => {
                     <option key={category} value={category}>{category}</option>
                   ))}
                 </select>
+              </div>
+              <div>
+              <label className="block text-sm text-zinc-400">Prioridade</label>
+                <select className="w-full p-2 rounded bg-zinc-800 text-zinc-200 border border-zinc-700 focus:outline-none focus:ring focus:ring-zinc-600">
+                {prioridades.map((prioridade) => (
+                    <option key={prioridade} value={prioridade}>{prioridade}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+              <label className="block text-sm text-zinc-400">Data de conclusão</label>
+              <input 
+                  type="date" 
+                  className="w-full p-2 rounded bg-zinc-800 text-zinc-200 border border-zinc-700 focus:outline-none focus:ring focus:ring-zinc-600"
+                />
               </div>
               <button 
                 type="submit" 
