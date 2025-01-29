@@ -1,6 +1,6 @@
 import Hero from "@/components/Hero";
 import NavbarLeft from "@/components/NavbarLeft";
-import NavbarRigth from "@/components/TascksTable";
+import NavbarRigth from "@/components/NavbarRigth";
 
 
 export default function Home() {

@@ -15,7 +15,7 @@ const NavbarRigth: React.FC = () => {
   }
   
     return (
-      <div className="w-72 bg-zinc-950 h-60 max-w-md mx-auto mr-6">
+      <div className="w-72 bg-zinc-950 h-60 max-w-md mt-6 mx-auto mr-6">
       <div className="flex justify-between mb-4">
         <span className="text-lg font-bold">{format(currentDate, 'MMMM yyyy', { locale: ptBR })}</span>
       </div>
