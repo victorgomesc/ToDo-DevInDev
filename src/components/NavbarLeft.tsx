@@ -3,6 +3,9 @@
 import React, { useState } from 'react';
 import { FaHome, FaUser, FaPlusSquare } from "react-icons/fa";
 import { MdLibraryAddCheck } from "react-icons/md";
+import axios from "axios";
+
+
 
 interface NavItem {
   label: string;
@@ -10,14 +13,41 @@ interface NavItem {
   icon: React.ReactNode; 
 }
 
-const NavbarLeft = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const navItems = [
+const NavbarLeft: React.FC = () => {
+const navItems = [
     { icon: <FaHome />, label: 'Home', href: '#' },
     { icon: <FaUser />, label: 'Victor Gomes', href: '#' },
     { icon: <MdLibraryAddCheck />, label: 'My tasks', href: '#' }
   ];
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [name, setName] = useState<string>('')
+  const [category, setCategory] = useState<string>('')
+  const [priority, setPriority] = useState<string>('')
+  const [date, setDate] = useState<string>('')
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const newTask = {
+      name,
+      category,  
+      priority,
+      date,
+    }
+
+  try {
+    await axios.post("https://localhost:5012/task", newTask)
+    .then(response => console.log(response.data))
+    .catch(error => console.error(error));
+    
+    alert('Tarefa cadastrada com sucesso!');
+
+  } catch (error) {
+    console.error('Erro ao conectar com o servidor:', error);
+    alert('Erro ao cadastrar task. Tente novamente mais tarde.');
+  }
+};
 
   const categories = [
     'Estudo', 'Trabalho', 'Atividade Fisica', 'Lazer', 'outro'
@@ -82,28 +112,44 @@ const NavbarLeft = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-lg font-semibold text-zinc-200">Add New Task</h2>
-            <form className="mt-4 space-y-4">
+            <form className="mt-4 space-y-4" name='cadastro' onSubmit={handleSubmit}>
               <div>
                 <label className="block text-sm text-zinc-400">Task Name</label>
+
                 <input 
                   type="text" 
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="w-full p-2 rounded bg-zinc-800 text-zinc-200 border border-zinc-700 focus:outline-none focus:ring focus:ring-zinc-600"
                   placeholder="Enter task name"
+                  required
                 />
+
               </div>
               <div>
                 <label className="block text-sm text-zinc-400">Category</label>
+
                 <select 
+                  value={category} 
+                  onChange={(e) => setCategory(e.target.value)}
+                  required
                   className="w-full p-2 rounded bg-zinc-800 text-zinc-200 border border-zinc-700 focus:outline-none focus:ring focus:ring-zinc-600"
                 >
+                  <option value="">Selecione uma categoria</option>
                   {categories.map((category) => (
                     <option key={category} value={category}>{category}</option>
                   ))}
                 </select>
+
               </div>
               <div>
               <label className="block text-sm text-zinc-400">Prioridade</label>
-                <select className="w-full p-2 rounded bg-zinc-800 text-zinc-200 border border-zinc-700 focus:outline-none focus:ring focus:ring-zinc-600">
+                <select 
+                value={priority}
+                onChange={(e) => setPriority(e.target.value)}
+                required
+                className="w-full p-2 rounded bg-zinc-800 text-zinc-200 border border-zinc-700 focus:outline-none focus:ring focus:ring-zinc-600">
+                <option value="">Selecione uma prioridade</option>
                 {prioridades.map((prioridade) => (
                     <option key={prioridade} value={prioridade}>{prioridade}</option>
                   ))}
@@ -113,6 +159,9 @@ const NavbarLeft = () => {
               <label className="block text-sm text-zinc-400">Data de conclusão</label>
               <input 
                   type="date" 
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  required
                   className="w-full p-2 rounded bg-zinc-800 text-zinc-200 border border-zinc-700 focus:outline-none focus:ring focus:ring-zinc-600"
                 />
               </div>
