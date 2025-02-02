@@ -4,6 +4,12 @@ import React, { useState } from 'react';
 import { FaHome, FaUser, FaPlusSquare } from "react-icons/fa";
 import { MdLibraryAddCheck } from "react-icons/md";
 
+interface NavItem {
+  label: string;
+  href: string;
+  icon: React.ReactNode; 
+}
+
 const NavbarLeft = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -21,7 +27,7 @@ const NavbarLeft = () => {
     'Alta', 'Media', 'Moderada', 'Altissima'
   ]
 
-  const renderNavItems = (items) => {
+  const renderNavItems = (items: NavItem[]) => {
     return items.map(item => (
       <a key={item.label} href={item.href} className="flex items-center gap-3 text-sm font-semibold text-zinc-200">
         {item.icon}
@@ -30,7 +36,7 @@ const NavbarLeft = () => {
     ));
   };
 
-  const renderCategories = (categories) => {
+  const renderCategories = (categories: string[]) => {
     return categories.map(category => (
       <a key={category} href="#" className="text-sm text-zinc-400 hover:text-zinc-100">
         {category}
