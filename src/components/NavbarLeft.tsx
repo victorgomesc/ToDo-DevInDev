@@ -24,7 +24,7 @@ const navItems = [
   const [name, setName] = useState<string>('')
   const [category, setCategory] = useState<string>('')
   const [priority, setPriority] = useState<string>('')
-  const [date, setDate] = useState<string>('')
+  const [date, setDate] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ const navItems = [
     }
 
   try {
-    await axios.post("https://localhost:5012/task", newTask)
+    await axios.post("https://localhost:5074/task", newTask)
     .then(response => console.log(response.data))
     .catch(error => console.error(error));
     
