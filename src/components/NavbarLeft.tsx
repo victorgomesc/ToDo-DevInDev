@@ -21,7 +21,7 @@ const navItems = [
   ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [name, setName] = useState<string>('')
+  const [taskName, setTaskName] = useState<string>('')
   const [category, setCategory] = useState<string>('')
   const [priority, setPriority] = useState<string>('')
   const [date, setDate] = useState('')
@@ -30,18 +30,27 @@ const navItems = [
     e.preventDefault();
 
     const newTask = {
-      name,
+      taskName,
       category,  
       priority,
       date,
     }
 
   try {
-    await axios.post("https://localhost:5074/task", newTask)
-    .then(response => console.log(response.data))
-    .catch(error => console.error(error));
+    await axios.post("https://localhost:5074/task", newTask, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
     
     alert('Tarefa cadastrada com sucesso!');
+
+    alert("Tarefa cadastrada com sucesso!");
+    setIsModalOpen(false);
+    setTaskName("");
+    setCategory("");
+    setPriority("");
+    setDate("");
 
   } catch (error) {
     console.error('Erro ao conectar com o servidor:', error);
@@ -118,8 +127,8 @@ const navItems = [
 
                 <input 
                   type="text" 
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={taskName}
+                  onChange={(e) => setTaskName(e.target.value)}
                   className="w-full p-2 rounded bg-zinc-800 text-zinc-200 border border-zinc-700 focus:outline-none focus:ring focus:ring-zinc-600"
                   placeholder="Enter task name"
                   required
