@@ -5,12 +5,11 @@ import { FaHome, FaUser, FaPlusSquare } from "react-icons/fa";
 import { MdLibraryAddCheck } from "react-icons/md";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
-import { useTaskStore } from "../store/TaskStore"; // Importamos o Zustand Store
+import { useTaskStore } from "../store/TaskStore"; 
 
 const NavbarLeft: React.FC = () => {
   const queryClient = useQueryClient();
   
-  // Pegamos os estados e ações do Zustand
   const { isModalOpen, task, openModal, closeModal, setTaskField, resetTask } = useTaskStore();
 
   const navItems = [
