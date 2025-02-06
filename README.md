@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ToDo-DevInDev
 
-## Getting Started
+## 📝 Sobre o Projeto
 
-First, run the development server:
+<p>ToDo-DevInDev é uma aplicação de lista de tarefas (To-Do List) desenvolvida para otimizar a gestão de tarefas do dia 
+a dia. O frontend foi construído utilizando React com Next.js, estilizado com Tailwind CSS, e gerenciado com React Query
+ e Zustand. No backend, utilizei C# e um banco de dados MongoDB para armazenar e manipular as tarefas.</p>
+
+
+ ## 🚀 Tecnologias Utilizadas
+
+<ul>
+<h2>Frontend:</h2>
+<li>React + Next.js: Framework para criação de aplicações performáticas e otimizadas.</li>
+<li>Tailwind CSS: Biblioteca para estilização rápida e eficiente.</li>
+<li>React Query: Gerenciamento de estado assíncrono, cache e sincronização de dados do backend.</li>
+<li>Zustand: Gerenciamento de estado global simples e escalável.</li>
+</ul>
+
+<ul>
+<h2>Backend:</h2>
+<li>C#: Linguagem utilizada para a API.</li>
+<li>ASP.NET Core: Framework para construção da API REST.</li>
+<li>MongoDB: Banco de dados NoSQL utilizado para armazenar as tarefas.</li>
+</ul>
+  
+## 🔥 Importância do Projeto
+
+<p>Este projeto foi desenvolvido para aprimorar habilidades em desenvolvimento Full Stack, explorando a sinergia entre 
+frontend e backend de forma otimizada. O uso do React Query e do Zustand permitiu melhorar a experiência do usuário ao 
+reduzir a latência e evitar múltiplas requisições desnecessárias para a API.</p>
+
+## ⚡ Como o React Query e o Zustand Otimizam os Processos?
+
+<h3>React Query:</h3>
+
+<ul>
+    <li>Permite o cache de requisições, evitando chamadas repetidas ao backend.</li>
+    <li>Sincroniza os dados automaticamente sempre que necessário.</li>
+    <li>Facilita a manipulação de estados assíncronos e melhora a experiência do usuário ao exibir dados rapidamente.</li>
+</ul>
+
+<h3>Zustand:</h3>
+
+<ul>
+    <li>Proporciona um gerenciamento de estado global simples e eficiente.</li>
+    <li>Evita re-renderizações desnecessárias, melhorando a performance da aplicação.</li>
+    <li>Permite uma melhor organização do código, tornando a aplicação mais escalável.</li>
+</ul>
+
+## 📌 Como Rodar o Projeto?
+
+### 🔧 Pré-requisitos
+
+Certifique-se de ter instalado em sua máquina:
+<ul>
+<li>Node.js e npm/yarn</li>
+<li>.NET SDK</li>
+<li>MongoDB</li>
+</ul>
+
+### ▶️ Passo a Passo
+
+1- Clone o repositorio:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   git clone https://github.com/victorgomesc/ToDo-DevInDev.git
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2- Entre no diretorio do prrojeto:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+   cd ToDo-DevInDev
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3- Instale as dependencias do front-end:
 
-## Learn More
+```bash
+   npm install
+   ```
+4- Inicie o front-end:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5- Configure e inicie o backend seguindo as instruções do repositório da API.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🛠️ Melhorias Futuras
+<ul>
+    <li>Implementação de autenticação e autorização.</li>
+    <li>Suporte para múltiplos usuários.</li>
+    <li>Notificações em tempo real.</li>
+</ul>
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📜 Licença
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<p>Este projeto está sob a licença MIT. Sinta-se à vontade para contribuir e sugerir melhorias!</p>
+
