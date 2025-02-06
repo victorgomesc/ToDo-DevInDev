@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { format } from "date-fns";
 
@@ -14,16 +14,22 @@ interface Task {
 }
 
 const TaskTable: React.FC = () => {
+  const queryClient = useQueryClient();
 
-  const {
-    data: tasks, 
-    isLoading,
-    error,
-  } = useQuery<Task[]>({
+  const { data: tasks, isLoading, error } = useQuery<Task[]>({
     queryKey: ["tasks"],
     queryFn: async () => {
       const response = await axios.get("https://localhost:5074/task");
       return response.data;
+    },
+  });
+
+  const deleteTaskMutation = useMutation({
+    mutationFn: async (taskId: number) => {
+      await axios.delete(`https://localhost:5074/task/${taskId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] }); 
     },
   });
 
@@ -52,32 +58,16 @@ const TaskTable: React.FC = () => {
           tasks.map((task) => (
             <div className="flex" key={task.id}>
               <div className="border border-gray-500 w-full items-center justify-center rounded-lg mb-6 flex">
-                <div
-                  className={`p-4 w-1/5 text-left ${
-                    task.completed ? "line-through text-gray-500" : ""
-                  }`}
-                >
+                <div className={`p-4 w-1/5 text-left ${task.completed ? "line-through text-gray-500" : ""}`}>
                   {task.taskName}
                 </div>
-                <div
-                  className={`p-4 w-1/5 ${
-                    task.completed ? "line-through text-gray-500" : ""
-                  }`}
-                >
+                <div className={`p-4 w-1/5 ${task.completed ? "line-through text-gray-500" : ""}`}>
                   {task.category}
                 </div>
-                <div
-                  className={`p-4 w-1/5 ${
-                    task.completed ? "line-through text-gray-500" : ""
-                  }`}
-                >
+                <div className={`p-4 w-1/5 ${task.completed ? "line-through text-gray-500" : ""}`}>
                   {task.priority}
                 </div>
-                <div
-                  className={`p-4 w-1/5 ${
-                    task.completed ? "line-through text-gray-500" : ""
-                  }`}
-                >
+                <div className={`p-4 w-1/5 ${task.completed ? "line-through text-gray-500" : ""}`}>
                   {task.date ? format(new Date(task.date), "dd/MM/yyyy") : "Data inválida"}
                 </div>
                 <div className="p-4 w-1/5">
@@ -85,7 +75,7 @@ const TaskTable: React.FC = () => {
                     type="checkbox"
                     checked={task.completed}
                     className="w-5 h-5 text-blue-500 text-right"
-                    readOnly
+                    onChange={() => deleteTaskMutation.mutate(task.id)}
                   />
                 </div>
               </div>
