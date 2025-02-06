@@ -1,8 +1,9 @@
 "use client";
+
 import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 interface Task {
   id: number;
@@ -29,7 +30,7 @@ const TaskTable: React.FC = () => {
       await axios.delete(`https://localhost:5074/task/${taskId}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] }); 
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 
@@ -40,6 +41,11 @@ const TaskTable: React.FC = () => {
   if (error) {
     return <div className="loading">Algo deu errado!</div>;
   }
+
+  // Ordenar as tarefas por data de conclusão
+  const sortedTasks = tasks?.slice().sort((a, b) => {
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
+  });
 
   return (
     <div className="w-11/12 items-center bg-zinc-950 text-center flex flex-col justify-center mt-10">
@@ -54,8 +60,8 @@ const TaskTable: React.FC = () => {
           </div>
         </div>
 
-        {tasks && tasks.length > 0 ? (
-          tasks.map((task) => (
+        {sortedTasks && sortedTasks.length > 0 ? (
+          sortedTasks.map((task) => (
             <div className="flex" key={task.id}>
               <div className="border border-gray-500 w-full items-center justify-center rounded-lg mb-6 flex">
                 <div className={`p-4 w-1/5 text-left ${task.completed ? "line-through text-gray-500" : ""}`}>
@@ -68,7 +74,7 @@ const TaskTable: React.FC = () => {
                   {task.priority}
                 </div>
                 <div className={`p-4 w-1/5 ${task.completed ? "line-through text-gray-500" : ""}`}>
-                  {task.date ? format(new Date(task.date), "dd/MM/yyyy") : "Data inválida"}
+                  {task.date ? format(parseISO(task.date), "dd/MM/yyyy") : "Data inválida"}
                 </div>
                 <div className="p-4 w-1/5">
                   <input
