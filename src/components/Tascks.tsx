@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
@@ -16,6 +16,8 @@ interface Task {
 
 const TaskTable: React.FC = () => {
   const queryClient = useQueryClient();
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [updatedTask, setUpdatedTask] = useState<Partial<Task>>({});
 
   const { data: tasks, isLoading, error } = useQuery<Task[]>({
     queryKey: ["tasks"],
@@ -34,6 +36,28 @@ const TaskTable: React.FC = () => {
     },
   });
 
+  const editTaskMutation = useMutation({
+    mutationFn: async (task: Task) => {
+      await axios.put(`https://localhost:5074/task/${task.id}`, task);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      setEditingTask(null);
+      setUpdatedTask({});
+    },
+  });
+
+  const handleEditClick = (task: Task) => {
+    setEditingTask(task);
+    setUpdatedTask(task);
+  };
+
+  const handleSaveClick = () => {
+    if (editingTask) {
+      editTaskMutation.mutate({ ...editingTask, ...updatedTask });
+    }
+  };
+
   if (isLoading) {
     return <div className="text-3xl">Loading...</div>;
   }
@@ -42,7 +66,6 @@ const TaskTable: React.FC = () => {
     return <div className="loading">Algo deu errado!</div>;
   }
 
-  // Ordenar as tarefas por data de conclusão
   const sortedTasks = tasks?.slice().sort((a, b) => {
     return new Date(a.date).getTime() - new Date(b.date).getTime();
   });
@@ -56,7 +79,7 @@ const TaskTable: React.FC = () => {
             <div className="p-4 w-1/5">Category</div>
             <div className="p-4 w-1/5">Prioridade</div>
             <div className="p-4 w-1/5">Data de conclusão</div>
-            <div className="p-4 w-1/5">Status</div>
+            <div className="p-4 w-1/5">Ações</div>
           </div>
         </div>
 
@@ -64,26 +87,47 @@ const TaskTable: React.FC = () => {
           sortedTasks.map((task) => (
             <div className="flex" key={task.id}>
               <div className="border border-gray-500 w-full items-center justify-center rounded-lg mb-6 flex">
-                <div className={`p-4 w-1/5 text-left ${task.completed ? "line-through text-gray-500" : ""}`}>
-                  {task.taskName}
-                </div>
-                <div className={`p-4 w-1/5 ${task.completed ? "line-through text-gray-500" : ""}`}>
-                  {task.category}
-                </div>
-                <div className={`p-4 w-1/5 ${task.completed ? "line-through text-gray-500" : ""}`}>
-                  {task.priority}
-                </div>
-                <div className={`p-4 w-1/5 ${task.completed ? "line-through text-gray-500" : ""}`}>
-                  {task.date ? format(parseISO(task.date), "dd/MM/yyyy") : "Data inválida"}
-                </div>
-                <div className="p-4 w-1/5">
-                  <input
-                    type="checkbox"
-                    checked={task.completed}
-                    className="w-5 h-5 text-blue-500 text-right"
-                    onChange={() => deleteTaskMutation.mutate(task.id)}
-                  />
-                </div>
+                {editingTask?.id === task.id ? (
+                  <>
+                    <input
+                      className="p-4 w-1/5 text-left bg-gray-800 text-white"
+                      value={updatedTask.taskName || ""}
+                      onChange={(e) => setUpdatedTask({ ...updatedTask, taskName: e.target.value })}
+                    />
+                    <input
+                      className="p-4 w-1/5 bg-gray-800 text-white"
+                      value={updatedTask.category || ""}
+                      onChange={(e) => setUpdatedTask({ ...updatedTask, category: e.target.value })}
+                    />
+                    <input
+                      className="p-4 w-1/5 bg-gray-800 text-white"
+                      value={updatedTask.priority || ""}
+                      onChange={(e) => setUpdatedTask({ ...updatedTask, priority: e.target.value })}
+                    />
+                    <input
+                      className="p-4 w-1/5 bg-gray-800 text-white"
+                      type="date"
+                      value={updatedTask.date || ""}
+                      onChange={(e) => setUpdatedTask({ ...updatedTask, date: e.target.value })}
+                    />
+                    <button className="p-4 w-1/5 bg-green-600 text-white" onClick={handleSaveClick}>Salvar</button>
+                  </>
+                ) : (
+                  <>
+                    <div className="p-4 w-1/5 text-left">{task.taskName}</div>
+                    <div className="p-4 w-1/5">{task.category}</div>
+                    <div className="p-4 w-1/5">{task.priority}</div>
+                    <div className="p-4 w-1/5">{task.date ? format(parseISO(task.date), "dd/MM/yyyy") : "Data inválida"}</div>
+                    <div className="p-4 w-1/5 flex gap-2">
+                    <div className="w-1/2 items-center">
+                    <input type="checkbox" className="w-5 h-5 mt-1" onChange={() => deleteTaskMutation.mutate(task.id)} />
+                    </div>
+                    <div className="w-1/2">
+                    <button className="bg-zinc-950 text-white px-2 py-1" onClick={() => handleEditClick(task)}>Editar</button>
+                    </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           ))
