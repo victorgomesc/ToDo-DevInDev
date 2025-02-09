@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
@@ -19,6 +19,7 @@ const TaskTable: React.FC = () => {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [updatedTask, setUpdatedTask] = useState<Partial<Task>>({});
 
+  // 🔄 Busca as tarefas do backend
   const { data: tasks, isLoading, error } = useQuery<Task[]>({
     queryKey: ["tasks"],
     queryFn: async () => {
@@ -27,6 +28,7 @@ const TaskTable: React.FC = () => {
     },
   });
 
+  // ✅ Mutation para deletar uma tarefa específica
   const deleteTaskMutation = useMutation({
     mutationFn: async (taskId: number) => {
       await axios.delete(`https://localhost:5074/task/${taskId}`);
@@ -36,6 +38,26 @@ const TaskTable: React.FC = () => {
     },
   });
 
+  // ✅ Mutation para remover automaticamente as tarefas vencidas
+  const cleanupTasksMutation = useMutation({
+    mutationFn: async () => {
+      await axios.delete("https://localhost:5074/task/cleanup"); // <- Endpoint que remove tarefas vencidas
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
+  // ✅ Executa a remoção automática das tarefas vencidas periodicamente
+  useEffect(() => {
+    const interval = setInterval(() => {
+      cleanupTasksMutation.mutate(); // 🔄 Chama a API para limpar tarefas vencidas
+    }, 30000); // A cada 30 segundos
+
+    return () => clearInterval(interval);
+  }, [cleanupTasksMutation]);
+
+  // ✅ Mutation para editar uma tarefa
   const editTaskMutation = useMutation({
     mutationFn: async (task: Task) => {
       await axios.put(`https://localhost:5074/task/${task.id}`, task);
@@ -119,12 +141,12 @@ const TaskTable: React.FC = () => {
                     <div className="p-4 w-1/5">{task.priority}</div>
                     <div className="p-4 w-1/5">{task.date ? format(parseISO(task.date), "dd/MM/yyyy") : "Data inválida"}</div>
                     <div className="p-4 w-1/5 flex gap-2">
-                    <div className="w-1/2 items-center">
-                    <input type="checkbox" className="w-5 h-5 mt-1" onChange={() => deleteTaskMutation.mutate(task.id)} />
-                    </div>
-                    <div className="w-1/2">
-                    <button className="bg-zinc-950 text-white px-2 py-1" onClick={() => handleEditClick(task)}>Editar</button>
-                    </div>
+                      <div className="w-1/2 items-center">
+                        <input type="checkbox" className="w-5 h-5 mt-1" onChange={() => deleteTaskMutation.mutate(task.id)} />
+                      </div>
+                      <div className="w-1/2">
+                        <button className="bg-zinc-950 text-white px-2 py-1" onClick={() => handleEditClick(task)}>Editar</button>
+                      </div>
                     </div>
                   </>
                 )}
