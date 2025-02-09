@@ -15,7 +15,7 @@ const NavbarLeft: React.FC = () => {
   const navItems = [
     { icon: <FaHome />, label: "Home", href: "#" },
     { icon: <FaUser />, label: "Victor Gomes", href: "#" },
-    { icon: <MdLibraryAddCheck />, label: "My tasks", href: "#" },
+    { icon: <MdLibraryAddCheck />, label: "Minhas tarefas", href: "#" },
   ];
 
   const categories = ["Estudo", "Trabalho", "Atividade Fisica", "Lazer", "Outro"];
@@ -54,7 +54,7 @@ const NavbarLeft: React.FC = () => {
 
         <nav className="space-y-5 mt-10 pt-10 border-t border-zinc-800">
           <button className="flex items-center gap-3 text-sm font-semibold text-zinc-200" onClick={openModal}>
-            <FaPlusSquare /> Add new Task
+            <FaPlusSquare /> Nova tarefa
           </button>
         </nav>
 

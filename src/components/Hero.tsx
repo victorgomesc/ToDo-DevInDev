@@ -7,7 +7,7 @@ const Hero = () => {
       <div className="w-full h-2/5 bg-cover bg-center" style={{ backgroundImage: "url('/assets/garden.jpeg')" }}>
         <div className="flex items-center justify-center w-full h-full">
           <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-bold text-center drop-shadow-lg">
-            Organize your life
+            Organize seu tempo
           </h1>
         </div>
       </div>

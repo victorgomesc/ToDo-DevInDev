@@ -19,7 +19,6 @@ const TaskTable: React.FC = () => {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [updatedTask, setUpdatedTask] = useState<Partial<Task>>({});
 
-  // 🔄 Busca as tarefas do backend
   const { data: tasks, isLoading, error } = useQuery<Task[]>({
     queryKey: ["tasks"],
     queryFn: async () => {
@@ -28,7 +27,6 @@ const TaskTable: React.FC = () => {
     },
   });
 
-  // ✅ Mutation para deletar uma tarefa específica
   const deleteTaskMutation = useMutation({
     mutationFn: async (taskId: number) => {
       await axios.delete(`https://localhost:5074/task/${taskId}`);
@@ -38,26 +36,23 @@ const TaskTable: React.FC = () => {
     },
   });
 
-  // ✅ Mutation para remover automaticamente as tarefas vencidas
   const cleanupTasksMutation = useMutation({
     mutationFn: async () => {
-      await axios.delete("https://localhost:5074/task/cleanup"); // <- Endpoint que remove tarefas vencidas
+      await axios.delete("https://localhost:5074/task/cleanup"); 
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 
-  // ✅ Executa a remoção automática das tarefas vencidas periodicamente
   useEffect(() => {
     const interval = setInterval(() => {
-      cleanupTasksMutation.mutate(); // 🔄 Chama a API para limpar tarefas vencidas
-    }, 30000); // A cada 30 segundos
+      cleanupTasksMutation.mutate();
+    }, 30000); 
 
     return () => clearInterval(interval);
   }, [cleanupTasksMutation]);
 
-  // ✅ Mutation para editar uma tarefa
   const editTaskMutation = useMutation({
     mutationFn: async (task: Task) => {
       await axios.put(`https://localhost:5074/task/${task.id}`, task);
