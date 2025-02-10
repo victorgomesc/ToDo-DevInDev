@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react";
 import Hero from "@/components/Hero";
 import NavbarLeft from "@/components/NavbarLeft";
 import NavbarRigth from "@/components/NavbarRigth";
