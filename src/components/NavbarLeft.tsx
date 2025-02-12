@@ -53,7 +53,7 @@ const NavbarLeft: React.FC = () => {
         </nav>
 
         <nav className="space-y-5 mt-10 pt-10 border-t border-zinc-800">
-          <button className="flex items-center gap-3 text-sm font-semibold text-zinc-200" onClick={openModal}>
+          <button data-testid="input-task" className="flex items-center gap-3 text-sm font-semibold text-zinc-200" onClick={openModal}>
             <FaPlusSquare /> Nova tarefa
           </button>
         </nav>
